@@ -51,6 +51,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         LinkClicked urlRequest ->
+            Debug.log ("LinkClicked: " ++ Debug.toString urlRequest) <|
             case urlRequest of
                 Browser.Internal url ->
                     ( model, Nav.pushUrl model.key (Url.toString url) )
@@ -59,6 +60,7 @@ update msg model =
                     ( model, Nav.load href )
 
         UrlChanged url ->
+            Debug.log ("Url changed: " ++ url.path) <|
             ( { model | url = url }
             , Cmd.none
             )
