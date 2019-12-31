@@ -4,6 +4,7 @@ import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events as Events
 import Url
 
 
@@ -45,6 +46,7 @@ init flags url key =
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
+    | GoBack
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -64,6 +66,10 @@ update msg model =
             ( { model | url = url }
             , Cmd.none
             )
+
+        GoBack ->
+            Debug.log "Back clicked"
+            ( model, Nav.back model.key 1 )
 
 
 
@@ -92,6 +98,7 @@ view model =
             , viewLink "/reviews/public-opinion"
             , viewLink "/reviews/shah-of-shahs"
             ]
+        , button [ Events.onClick GoBack ] [ text "Go back" ]
         ]
     }
 
