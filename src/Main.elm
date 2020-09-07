@@ -31,12 +31,13 @@ main =
 type alias Model =
     { key : Nav.Key
     , url : Url.Url
+    , history : List Url.Url
     }
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url key =
-    ( Model key url, Cmd.none )
+    ( Model key url [], Cmd.none )
 
 
 
@@ -63,7 +64,7 @@ update msg model =
 
         UrlChanged url ->
             Debug.log ("Url changed: " ++ url.path) <|
-            ( { model | url = url }
+            ( { model | url = url, history = model.history ++ [ url ] }
             , Cmd.none
             )
 
@@ -99,6 +100,11 @@ view model =
             , viewLink "/reviews/shah-of-shahs"
             ]
         , button [ Events.onClick GoBack ] [ text "Go back" ]
+        , div []
+            [ text "URL changed events:"
+            , ul []
+                (List.map viewUrl model.history)
+            ]
         ]
     }
 
@@ -106,3 +112,8 @@ view model =
 viewLink : String -> Html msg
 viewLink path =
     li [] [ a [ href path ] [ text path ] ]
+
+
+viewUrl : Url.Url -> Html msg
+viewUrl url =
+    li [] [ text <| Url.toString url ]
